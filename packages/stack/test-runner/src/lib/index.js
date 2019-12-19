@@ -34,12 +34,14 @@ class TestRunner {
     this.configObj = embark.config;
     this.originalConfigObj = cloneDeep(embark.config);
     this.simOptions = {};
+    this.testsCliOptions = null;
 
     this.moduleConfigs = {
       namesystem: {}
     };
 
     this.events.setCommandHandler('tests:run', (options, callback) => {
+      this.testsCliOptions = options;
       this.run(options, callback);
     });
 
@@ -53,6 +55,13 @@ class TestRunner {
     this.events.setCommandHandler('tests:deployment:check', this.checkDeploymentOptions.bind(this));
     this.events.setCommandHandler('tests:blockchain:start', this.startBlockchainNode.bind(this));
     this.events.setCommandHandler('tests:config:check', this.checkModuleConfigs.bind(this));
+
+    this.events.setCommandHandler('tests:cli:options', (cb) => {
+      if (this.testsCliOptions === null) {
+        return cb(__("Please wait until tests have been run before requesting the CLI options"));
+      }
+      cb(null, this.testsCliOptions);
+    });
   }
 
   run(options, cb) {
