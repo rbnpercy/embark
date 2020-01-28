@@ -34,9 +34,6 @@
     "embarkjs-ens": "^5.1.1",
     "embarkjs-web3": "^5.1.1",
     "embark-geth": "^5.2.0-nightly.1",
-    "embark-parity": "^5.2.0-nightly.1",
-    "embark-profiler": "^5.1.1",
-    "embark-graph": "^5.1.1",
     "rimraf": "3.0.0"
   }
 }

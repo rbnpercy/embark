@@ -80,7 +80,6 @@
     "embark-core": "^5.2.0-nightly.1",
     "embark-deploy-tracker": "^5.2.0-nightly.1",
     "embark-engine": "^5.2.0-nightly.1",
-    "embark-graph": "^5.1.1",
     "embark-i18n": "^5.1.1",
     "embark-logger": "^5.1.2-nightly.0",
     "embark-reset": "^5.1.1",
