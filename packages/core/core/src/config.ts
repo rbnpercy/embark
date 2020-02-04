@@ -105,6 +105,7 @@ export class Config {
   constructor(options) {
     this.env = options.env || 'default';
     this.webServerConfig = options.webServerConfig;
+    this.embarkConfig = options.embarkConfig;
     this.configDir = options.configDir || DEFAULT_CONFIG_PATH;
     this.chainsFile = options.chainsFile;
     this.plugins = options.plugins;
@@ -178,12 +179,6 @@ export class Config {
       interceptLogs = true;
     }
 
-    if (!fs.existsSync(options.embarkConfig)) {
-      this.logger.error(__('Cannot find file %s Please ensure you are running this command inside the Dapp folder', options.embarkConfig));
-      process.exit(1);
-    }
-
-    this.embarkConfig = fs.readJSONSync(options.embarkConfig);
     this.embarkConfig.plugins = this.embarkConfig.plugins || {};
 
     this.plugins = new Plugins({

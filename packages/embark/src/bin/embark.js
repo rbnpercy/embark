@@ -6,12 +6,6 @@
 // on babel to achieve the same goal.
 // See: https://node.green/
 
-// KEY ASSUMPTION: for a DApp to be valid, from embark's perspective, it must
-// have a parsable embark.json file in its top-level directory; if that
-// requirement changes in the future then this script must be revised.
-// Hypothetical example of such a change: embark config info may be included in
-// package.json under `{"embark": {...}}` -or- stored in an embark.json file.
-
 function main() {
   if (whenNoShim()) return;
   var invoked = thisEmbark();
@@ -48,7 +42,7 @@ function main() {
   process.env.PKG_PATH = pkgJson.dirname;
   var embark = select(invoked, local);
   process.env.EMBARK_PATH = embark.pkgDir;
-  embark.exec();
+  embark.exec(embarkJson);
 }
 
 // -----------------------------------------------------------------------------
@@ -79,9 +73,9 @@ function EmbarkBin(binpath, kind) {
   this.pkgJson = undefined;
 }
 
-EmbarkBin.prototype.exec = function () {
+EmbarkBin.prototype.exec = function (embarkJson) {
   var Cmd = require('../cmd/cmd');
-  var cli = new Cmd();
+  var cli = new Cmd({embarkConfig: embarkJson.json});
   if(_logged) { console[this.loglevel](); }
   cli.process(process.argv);
 };
@@ -354,11 +348,16 @@ Json.prototype.log = function () {
 
 Json.prototype.loglevel = 'warn';
 
-Json.prototype.logMissingFile = function () {
+Json.prototype.logMissingFile = function (doReport) {
+  if (doReport === undefined) {
+    doReport = true;
+  }
   var missing;
   if (!this.realpath) {
     missing = true;
-    reportMissingFile(this.filepath, this.loglevel);
+    if (doReport) {
+      reportMissingFile(this.filepath, this.loglevel);
+    }
   }
   return missing;
 };
@@ -413,9 +412,14 @@ EmbarkJson.prototype.log = function () {
 };
 
 EmbarkJson.prototype.logMissingFile = function () {
-  if (isDappCmd(this.cmd) && Json.prototype.logMissingFile.call(this)) {
-    reportMissingFile_DappJson(this.cmd, this.loglevel, 'embark', 'in');
-    exitWithError();
+  if (Json.prototype.logMissingFile.call(this, false)) {
+    // Use default embark.json
+    if (isDappCmd(this.cmd)) {
+      // TODO add message about embark init once it's available
+      embarklog['warn']('No embark.json file found.\n' +
+        'You can find a basic embark.json file here: https://github.com/embarklabs/embark/blob/master/dapps/templates/boilerplate/embark.json');
+      exitWithError();
+    }
   }
 };
 
