@@ -6,9 +6,11 @@ import {
   ProcessManager,
   ServicesMonitor
 } from 'embark-core';
+import fs from 'fs-extra';
 import { normalizeInput } from 'embark-utils';
 import { Logger } from 'embark-logger';
 import defaultEmbarkJson from './defaultEmbarkJson';
+import { __ } from 'embark-i18n';
 
 const EMBARK_PROCESS_NAME = 'embark';
 
@@ -116,6 +118,13 @@ export class Engine {
     }
 
     callback();
+  }
+
+  async generateEmbarkJSON() {
+    if (fs.existsSync('embark.json')) {
+      throw new Error(__('embark.json already there. Will not overwrite'));
+    }
+    return fs.writeFile('embark.json', JSON.stringify(defaultEmbarkJson, null, 2));
   }
 
   loadDappPlugins() {
