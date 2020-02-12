@@ -338,7 +338,7 @@ export default class ContractsManager {
 
           if (contract.address && typeof contract.address === 'function') {
             contract.addressHandler = contract.address;
-            delete contract.addres;
+            delete contract.address;
           } else if (contract.address && typeof contract.address === 'string') {
             contract.deployedAddress = contract.address;
           }
@@ -393,22 +393,23 @@ export default class ContractsManager {
         for (className in self.contracts) {
           contract = self.contracts[className];
 
-          if (contract.instanceOf === undefined && contract.proxyFor === undefined) {
+          if (!contract.instanceOf && !contract.proxyFor) {
             continue;
           }
 
           if (contract.instanceOf) {
             parentContractName = contract.instanceOf;
             parentContract = self.contracts[parentContractName];
-            if (!self._isParentParentContractDependencyCorrect(className, parentContract, 'instanceOf', dictionary)) {
+            if (!self._isParentContractDependencyCorrect(className, parentContract, 'instanceOf', dictionary)) {
               continue;
             }
 
-            if (parentContract.args && parentContract.args.length > 0 && ((contract.args && contract.args.length === 0) || contract.args === undefined)) {
+            // If the contract has no args and the parent has them, use the parent's args in its place
+            if (parentContract.args?.length > 0 && contract.args?.length === 0) {
               contract.args = parentContract.args;
             }
 
-            if (contract.code !== undefined) {
+            if (!contract.code) {
               self.logger.error(__("{{className}} has code associated to it but it's configured as an instanceOf {{parentContractName}}", {
                 className,
                 parentContractName
@@ -434,13 +435,12 @@ export default class ContractsManager {
           if (contract.proxyFor) {
             parentContractName = contract.proxyFor;
             parentContract = self.contracts[parentContractName];
-            if (!self._isParentParentContractDependencyCorrect(className, parentContract, 'proxyFor', dictionary)) {
+            if (!self._isParentContractDependencyCorrect(className, parentContract, 'proxyFor', dictionary)) {
               continue;
             }
 
             // Merge ABI of contract and proxy so that the contract shares both ABIs, but remove the constructor
             contract.abiDefinition = contract.abiDefinition.concat(parentContract.abiDefinition.filter(def => def.type !== 'constructor'));
-            console.log('please');
           }
         }
         callback();
@@ -551,7 +551,7 @@ export default class ContractsManager {
     });
   }
 
-  _isParentParentContractDependencyCorrect(className, parentContract, typeOfInheritance, dictionary) {
+  _isParentContractDependencyCorrect(className, parentContract, typeOfInheritance, dictionary) {
     const parentContractName = parentContract.className;
     if (parentContract === className) {
       this.logger.error(__("{{className}} : {{typeOfInheritance}} is set to itself", {className, typeOfInheritance}));
