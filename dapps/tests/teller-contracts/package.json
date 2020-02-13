@@ -1,22 +1,27 @@
 {
-  "name": "teller-contracts",
-  "version": "0.0.1",
-  "description": "",
+  "name": "embark-dapp-teller-test-contracts",
+  "description": "Test Teller contracts for integration testing purposes",
+  "version": "5.2.0-nightly.1",
   "scripts": {
-    "test": "embark test"
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "qa": "npm run test",
+    "reset": "npx embark-reset && npx rimraf embark-*.tgz package",
+    "test": "npx embark test"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "tabookey-gasless": "^0.4.1"
-  },
   "devDependencies": {
+    "embark": "^5.2.0-nightly.1",
+    "embark-reset": "^5.1.1",
     "embarkjs": "^5.1.1",
     "embarkjs-ens": "^5.1.1",
     "embarkjs-ipfs": "^5.1.1",
     "embarkjs-swarm": "^5.1.1",
     "embarkjs-web3": "^5.1.1",
-    "embarkjs-whisper": "^5.1.1"
+    "embarkjs-whisper": "^5.1.1",
+    "rimraf": "3.0.0",
+    "tabookey-gasless": "^0.4.1"
   }
 }
