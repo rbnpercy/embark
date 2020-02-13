@@ -1,4 +1,4 @@
-/*global contract, config, it, assert, web3, before, describe, beforeEach*/
+/*global contract, config, it, assert, web3, before, describe, beforeEach, increaseTime*/
 const TestUtils = require("../utils/testUtils");
 
 const ArbitrationLicense = require('Embark/contracts/ArbitrationLicense');
@@ -101,7 +101,11 @@ contract("Escrow", function() {
   // util
   const expireTransaction = async() => {
     const addTime = 5 * 86400;
-    await TestUtils.increaseTime(addTime + 1);
+    try {
+      await increaseTime(addTime);
+    } catch (e) {
+      console.error('Error with the increase time', e);
+    }
   };
 
   let receipt, escrowId, escrowTokenId, _offerId, sntOfferId, ethOfferId, tokenOfferId, hash, signature, nonce;
