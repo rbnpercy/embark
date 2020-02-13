@@ -77,16 +77,6 @@ module.exports = {
         proxyFor: "OfferStore",
         args: ["0x", "$OfferStore"]
       },
-      "RLPReader": {
-        file: 'tabookey-gasless/contracts/RLPReader.sol'
-      },
-      "RelayHub": {
-        file: 'tabookey-gasless/contracts/RelayHub.sol'
-      },
-      EscrowRelay: {
-        args: ["$OfferStoreInstance", "$EscrowInstance", "$SNT"],
-        deps: ['RelayHub']
-      },
       Escrow: {
         args: ["$accounts[0]", FALLBACK_ARBITRATOR_MAINNET, "$ArbitrationLicense", "$OfferStore", "$UserStore", "$KyberFeeBurner", FEE_MILLI_PERCENT]
       },
@@ -154,12 +144,6 @@ module.exports = {
       KyberNetworkProxy: {
         // https://developer.kyber.network/docs/Environments-Rinkeby/
         address: "0xF77eC7Ed5f5B9a5aee4cfa6FFCaC6A4C315BaC76"
-      },
-      RLPReader: {
-        deploy: false
-      },
-      RelayHub: {
-        address: '0xd216153c06e857cd7f72665e0af1d7d82172f494'
       }
     }
   },
@@ -170,12 +154,6 @@ module.exports = {
     deploy: {
       SNT: {
         address: "0xc55cf4b03948d7ebc8b9e8bad92643703811d162"
-      },
-      "RLPReader": {
-        deploy: false
-      },
-      "RelayHub": {
-        address: "0x1349584869A1C7b8dc8AE0e93D8c15F5BB3B4B87"
       },
       "MiniMeTokenFactory": {
         deploy: false
@@ -205,10 +183,6 @@ module.exports = {
       MKR: {deploy: false},
       SNT: {
         address: "0x744d70fdbe2ba4cf95131626614a1763df805b9e"
-      },
-      "RLPReader": {deploy: false},
-      "RelayHub": {
-        address: "0xd216153c06e857cd7f72665e0af1d7d82172f494"
       },
       "MiniMeTokenFactory": {deploy: false},
       KyberNetworkProxy: {
@@ -249,9 +223,6 @@ module.exports = {
         instanceOf: "Proxy",
         proxyFor: "OfferStore",
         address: "0xf0dfd170aedf576717b7de14dac257c832a364e2"
-      },
-      EscrowRelay: {
-        address: "0xd53A5F60bAb07898a295579f0e17E8746B7B857F"
       },
       Escrow: {
         address: "0x727bF4BAed69265bBaFD39f0ab6e508F6fA118a7"

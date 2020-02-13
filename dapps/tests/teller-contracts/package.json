@@ -1,5 +1,5 @@
 {
-  "name": "embark-dapp-teller-test-contracts",
+  "name": "embark-dapp-test-teller-contracts",
   "description": "Test Teller contracts for integration testing purposes",
   "version": "5.2.0-nightly.1",
   "scripts": {
@@ -21,7 +21,6 @@
     "embarkjs-swarm": "^5.1.1",
     "embarkjs-web3": "^5.1.1",
     "embarkjs-whisper": "^5.1.1",
-    "rimraf": "3.0.0",
-    "tabookey-gasless": "^0.4.1"
+    "rimraf": "3.0.0"
   }
 }

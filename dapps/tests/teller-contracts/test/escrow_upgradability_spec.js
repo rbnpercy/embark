@@ -1,7 +1,6 @@
-/*global contract, config, it, assert, web3, before, describe, beforeEach*/
+/*global contract, config, it, assert, web3, before, describe*/
 const TestUtils = require("../utils/testUtils");
 const EscrowInstance = require('Embark/contracts/EscrowInstance');
-const EscrowRelay = require('Embark/contracts/EscrowRelay');
 const ArbitrationLicense = require('Embark/contracts/ArbitrationLicense');
 const SNT = require('Embark/contracts/SNT');
 const UserStore = require('Embark/contracts/UserStore');
@@ -74,10 +73,6 @@ config({
         args: ["0x", "$Escrow"]
       },
 
-      EscrowRelay: {
-        args: ["$OfferStore", "$Proxy", "$SNT"]
-      },
-
       TestEscrowUpgrade: {
         args: ["$accounts[0]", "0x0000000000000000000000000000000000000002", "$ArbitrationLicense", "$OfferStore", "$UserStore", BURN_ADDRESS, 1000]
       },
@@ -96,10 +91,8 @@ contract("Escrow", function() {
 
     before(async () => {
       await UserStore.methods.setAllowedContract(EscrowInstance.options.address, true).send();
-      await UserStore.methods.setAllowedContract(EscrowRelay.options.address, true).send();
 
       await OfferStore.methods.setAllowedContract(EscrowInstance.options.address, true).send();
-      await OfferStore.methods.setAllowedContract(EscrowRelay.options.address, true).send();
 
 
       await SNT.methods.generateTokens(accounts[0], 1000).send();
@@ -118,7 +111,7 @@ contract("Escrow", function() {
       // Here we are setting the initial "template" by calling the init() function
       EscrowInstance.methods.init(
         accounts[0],
-        EscrowRelay.options.address,
+        ArbitrationLicense.options.address, // random address for the relay
         ArbitrationLicense.options.address,
         OfferStore.options.address,
         UserStore.options.address,
@@ -150,6 +143,7 @@ contract("Escrow", function() {
 
     it("Can upgrade contract", async () => {
       receipt = await EscrowInstance.methods.updateCode(TestEscrowUpgrade.options.address).send();
+      // eslint-disable-next-line
       TestEscrowUpgrade.options.address = EscrowInstance.options.address;
     });
 
